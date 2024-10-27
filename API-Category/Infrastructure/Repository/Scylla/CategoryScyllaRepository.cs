@@ -53,7 +53,7 @@ public class CategoryScyllaRepository : ICategoryScyllaRepository
 
         var query = @"INSERT INTO category (
                             id,
-                            nome) VALUES (?,?)";
+                            name) VALUES (?,?)";
         var statement = new SimpleStatement(
             query,
             entity.Id,
