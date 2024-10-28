@@ -119,12 +119,14 @@ public class SellerScyllaRepository : ISellerScyllaRepository
         await _context.GetSession().ExecuteAsync(statement);
         return entity;
     }
-    public async Task DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
         var query = @"DELETE FROM seller WHERE id = ?";
         var statement = new SimpleStatement(query, id);
 
-        await _context.GetSession().ExecuteAsync(statement);
+        var row = await _context.GetSession().ExecuteAsync(statement);
+
+        return row.Any();
     }
 
     private SellerEntity ToEntity(Row row) => new SellerEntity

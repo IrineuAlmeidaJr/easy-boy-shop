@@ -84,16 +84,6 @@ public class Program
 
     private static void RegistryIncomingServices(WebApplicationBuilder builder)
     {
-        // CORS - Angular: localhost:4200
-#if DEBUG
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowLocalhost4200",
-                policy => policy.WithOrigins("http://localhost:4200")
-                                .AllowAnyMethod());
-
-        });
-#endif
     }
 
     private static void RegistryOutgoingServices(WebApplicationBuilder builder)

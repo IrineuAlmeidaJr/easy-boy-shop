@@ -40,15 +40,14 @@ public class SellerServices : ISellerServices
         return stored.Select(log => _sellerMapper.ToSellerResponse(log)).ToList();
     }
 
-    public async Task Delete(Guid id)
+    public async Task<bool> Delete(Guid id)
     {
-     var seller = await _sellerRepository.GetSellerByIdAsync(id);
-        if (seller == null)
+        var ret = await _sellerRepository.DeleteAsync(id);
+        if (!ret)
         {
             throw new NotFoundException($"Vendedor com ID {id} não encontrado");
         }
 
-      
-        await _sellerRepository.DeleteAsync(id);
+        return true;
     }
 }

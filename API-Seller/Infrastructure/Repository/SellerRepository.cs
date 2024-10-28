@@ -48,8 +48,8 @@ public class SellerRepository : ISellerRepository
         return storedCustomers;
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(Guid id)
     {        
-        await _sellerRepository.DeleteAsync(id);
+        return await _sellerRepository.DeleteAsync(id);
     }
 }
