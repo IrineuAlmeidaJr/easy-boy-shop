@@ -58,8 +58,7 @@ public class CustomerController : ControllerBase
 
         //try
         //{
-            var request = new CustomerRequest { Id = id };
-            var response = await _customerClient.GetCustomerByIdAsync(request);
+            var response = await _customerClient.GetCustomerByIdAsync(id);
             return Ok(response);
         //}
         //catch (Exception ex)

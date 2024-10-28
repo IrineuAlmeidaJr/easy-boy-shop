@@ -23,63 +23,22 @@ public class CustomerClient : ICustomerClient
 
     public async Task<CustomerResponse> CreateCustomerAsync(CustomerRequest request)
     {
-        try
-        {
-            var customerDto = await _customertRefitClient.CreateAsync(request);
+        var customerDto = await _customertRefitClient.CreateAsync(request);
 
-            return _customerMapper.ToCustomerResponse(customerDto);
-        }
-        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            throw new NotFoundException($"Customer ID {request.Id} not found.");
-        }
+        return _customerMapper.ToCustomerResponse(customerDto);        
     }
 
     public async Task<IEnumerable<CustomerResponse>> GetCustomerAllAsync()
-    {
-        try
-        {
-            var customersDto = await _customertRefitClient.GetCustomerAllAsync();
+    {        
+        var customersDto = await _customertRefitClient.GetCustomerAllAsync();
 
-            if (!customersDto.Any())
-            {
-                throw new NotFoundException("No clients found.");
-            }
-
-            return customersDto.Select(customer => _customerMapper.ToCustomerResponse(customer));
-        }
-        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            throw new NotFoundException("No clients found.");
-        }
+        return customersDto.Select(customer => _customerMapper.ToCustomerResponse(customer));      
     }
 
-    public async Task<CustomerResponse> GetCustomerByIdAsync(CustomerRequest request)
+    public async Task<CustomerResponse> GetCustomerByIdAsync(Guid id)
     {
-        try
-        {
-            var customerDto = await _customertRefitClient.GetCustomerByIdAsync(request.Id);
+        var customerDto = await _customertRefitClient.GetCustomerByIdAsync(id);
 
-            return _customerMapper.ToCustomerResponse(customerDto);
-        }
-        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            throw new NotFoundException($"Customer ID {request.Id} not found.");
-        }
+        return _customerMapper.ToCustomerResponse(customerDto);        
     }
-
-   
-
-
-
-
-
-
-
-
-
-    //private readonly IWalletRefitClient _walletRefitClient;
-    //private readonly IWalletMapper _walletMapper;
-
-
 }

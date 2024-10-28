@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization;
 using Application.Interface;
 using Application.Mapper;
 using Application.Service;
@@ -8,9 +10,6 @@ using Infrastructure.Interface;
 using Infrastructure.Interfaces;
 using Infrastructure.Repository;
 using Infrastructure.Repository.Scylla;
-using Microsoft.AspNetCore.Http.Json;
-using Refit;
-using System.Text.Json.Serialization;
 
 public class Program
 {
@@ -20,7 +19,7 @@ public class Program
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
 
-        // register services
+        // Register services
         RegistryInfrastructureServices(builder);
         RegistryApplicationServices(builder);
         RegistryIncomingServices(builder);
@@ -47,6 +46,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        // Configure ExceptionHandler
         app.UseMiddleware<ExceptionHandler>();
 
         app.UseHttpsRedirection();
@@ -85,16 +85,7 @@ public class Program
 
     private static void RegistryIncomingServices(WebApplicationBuilder builder)
     {
-        // CORS - Angular: localhost:4200
-        #if DEBUG
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowLocalhost4200",
-                policy => policy.WithOrigins("http://localhost:4200")
-                                .AllowAnyMethod());
-
-        });
-        #endif
+     
     }
 
     private static void RegistryOutgoingServices(WebApplicationBuilder builder)

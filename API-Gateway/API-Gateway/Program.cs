@@ -21,6 +21,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
 
         // register services
         RegistryInfrastructureServices(builder);
@@ -88,30 +90,31 @@ public class Program
 
     private static void RegistryIncomingServices(WebApplicationBuilder builder)
     {
-        // CORS - Angular: localhost:4200
-        #if DEBUG
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowLocalhost4200",
-                    policy => policy.WithOrigins("http://localhost:4200")
-                                    .AllowAnyMethod());
-
-            });
-        #endif
+        
     }
 
     private static void RegistryOutgoingServices(WebApplicationBuilder builder)
     {
         // Refit
+        // - Customer
         builder.Services.AddRefitClient<ICustomerRefitClient>()
             .ConfigureHttpClient((sp, c) =>
              {
                  var config = sp.GetRequiredService<IConfiguration>();
                  c.BaseAddress = new Uri(config["Customer:BaseUrl"]);
              });
+        // - Seller
+        builder.Services.AddRefitClient<ISellerRefitClient>()
+            .ConfigureHttpClient((sp, c) =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                c.BaseAddress = new Uri(config["Seller:BaseUrl"]);
+            });
+
 
         // Client
         builder.Services.AddScoped<ICustomerClient, CustomerClient>();
+        builder.Services.AddScoped<ISellerClient, SellerClient>();
 
     }
 }

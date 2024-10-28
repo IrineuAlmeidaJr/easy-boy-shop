@@ -35,25 +35,6 @@ public class ExceptionHandler
         }
     }
 
-    private Task HandleGeneralExceptionAsync(HttpContext context, Exception exception)
-    {
-        _logger.LogError(exception, "General Exception");
-
-        var statusCode = HttpStatusCode.InternalServerError;
-        var problemDetails = new ProblemDetails
-        {
-            Status = (int)statusCode,
-            Title = "An unexpected error has occurred!",
-            Detail = exception.Message,
-            Instance = context.Request.Path
-        };
-
-        context.Response.ContentType = "application/problem+json";
-        context.Response.StatusCode = (int)statusCode;
-        var result = JsonSerializer.Serialize(problemDetails);
-        return context.Response.WriteAsync(result);
-    }
-
     private Task HandleDomainExceptionAsync(HttpContext context, DomainException exception)
     {
         _logger.LogError(exception, "Domain Exception");
@@ -72,4 +53,41 @@ public class ExceptionHandler
         var result = JsonSerializer.Serialize(problemDetails);
         return context.Response.WriteAsync(result);
     }
+
+    private Task HandleGeneralExceptionAsync(HttpContext context, Exception exception)
+    {
+        ProblemDetails problemDetails;
+
+        // Verifica se exceção capturada veio do Refit, ou seja, de um requisição Http
+        if (exception is Refit.ApiException apiException && !string.IsNullOrWhiteSpace(apiException.Content))
+        {
+            _logger.LogError(exception, "API Exception");
+            problemDetails = JsonSerializer.Deserialize<ProblemDetails>(apiException.Content)
+                             ?? new ProblemDetails
+                             {
+                                 Status = (int)apiException.StatusCode,
+                                 Title = "API Error",
+                                 Detail = "An unexpected error occurred while processing the API response.",
+                                 Instance = context.Request.Path
+                             };
+        }
+        else
+        {
+
+            _logger.LogError(exception, "General Exception");
+            problemDetails = new ProblemDetails
+            {
+                Status = (int)HttpStatusCode.InternalServerError,
+                Title = "An unexpected error has occurred!",
+                Detail = exception.Message,
+                Instance = context.Request.Path
+            };
+        }
+
+        context.Response.ContentType = "application/problem+json";
+        context.Response.StatusCode = problemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
+        var result = JsonSerializer.Serialize(problemDetails);
+        return context.Response.WriteAsync(result);
+    }
+    
 }

@@ -6,6 +6,6 @@ namespace Application.Client;
 public interface ICustomerClient
 {
     Task<IEnumerable<CustomerResponse>> GetCustomerAllAsync();
-    Task<CustomerResponse> GetCustomerByIdAsync(CustomerRequest request);
+    Task<CustomerResponse> GetCustomerByIdAsync(Guid id);
     Task<CustomerResponse> CreateCustomerAsync(CustomerRequest request);
 }

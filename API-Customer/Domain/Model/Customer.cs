@@ -42,19 +42,19 @@ public sealed class Customer
         Regex regex;
 
         // Name
-        string trimName = name.Trim();
-        DomainExecptionValidation.When(string.IsNullOrEmpty(trimName),
+        DomainExecptionValidation.When(string.IsNullOrEmpty(name),
                "Nome não informado");
 
+        string trimName = name.Trim();
         DomainExecptionValidation.When(trimName.Length > 100,
                "Nome maior que 100 caracteres");
 
         // Email
         regex = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-        string trimEmail = email.Trim();
-        DomainExecptionValidation.When(string.IsNullOrEmpty(trimEmail),
+                DomainExecptionValidation.When(string.IsNullOrEmpty(email),
                "E-mail não informado");
 
+        string trimEmail = email.Trim();
         DomainExecptionValidation.When(trimEmail.Length > 100,
                "E-mail maior que 100 caracteres");
 
@@ -62,10 +62,10 @@ public sealed class Customer
                "E-mail inválido");
 
         // CPF
-        string trimCpf = regex.Replace(cpf.Trim(), "");
-        DomainExecptionValidation.When(string.IsNullOrEmpty(trimCpf),
+        DomainExecptionValidation.When(string.IsNullOrEmpty(cpf),
                "CPF não informado");
 
+        string trimCpf = regex.Replace(cpf.Trim(), "");
         DomainExecptionValidation.When(trimCpf.Length != 11,
                "CPF inválido");
 
