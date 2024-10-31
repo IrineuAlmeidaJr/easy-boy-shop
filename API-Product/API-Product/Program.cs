@@ -5,11 +5,13 @@ using Application.Service;
 using Domain.Interface;
 using Infrastructure.Adapter;
 using Infrastructure.Configuration;
+using Infrastructure.Configuration.Kafka;
 using Infrastructure.Interface;
 using Infrastructure.Interfaces;
 using Infrastructure.Repository;
 using Infrastructure.Repository.Scylla;
 using Microsoft.AspNetCore.Http.Json;
+using Outgoing.Messaging.Pacing;
 using System.Text.Json.Serialization;
 
 public class Program
@@ -56,13 +58,25 @@ public class Program
 
         app.MapControllers();
 
+        ExecuteInitializationServices(app);
+
         app.Run();
+    }
+
+
+    // Executa para garantir que esteja funcionando, caso contrário só iriar da erro
+    // quando fosse usar o serviço
+    private static void ExecuteInitializationServices(WebApplication app)
+    {
+        app.Services.GetRequiredService<IScyllaContext>();
+        app.Services.GetRequiredService<IKafkaContext>();
     }
 
     private static void RegistryInfrastructureServices(WebApplicationBuilder builder)
     {
         // Configuration contexts
         builder.Services.AddSingleton<IScyllaContext, ScyllaContext>();
+        builder.Services.AddSingleton<IKafkaContext, KafkaContext>();
 
         // Domain repositories
         builder.Services.AddSingleton<IProductRepository, ProductRepository>();
@@ -94,7 +108,8 @@ public class Program
 
     private static void RegistryOutgoingServices(WebApplicationBuilder builder)
     {
-
+        // Messaging
+        builder.Services.AddSingleton<IProductCreatedEventPublisher, ProductCreatedKafkaPublisher>();
     }
 }
 

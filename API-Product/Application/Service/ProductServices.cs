@@ -2,17 +2,21 @@
 using Application.Interface;
 using Domain.Interface;
 using Domain.Exception;
+using Domain.Model;
+using Domain.Event;
 
 namespace Application.Service;
 
 public class ProductServices : IProductServices
 {
     private IProductRepository _productRepository;
+    private IProductCreatedEventPublisher _publisher;
     private IProductMapper _productMapper;
 
-    public ProductServices(IProductRepository productRepository, IProductMapper productMapper)
+    public ProductServices(IProductRepository productRepository, IProductCreatedEventPublisher publisher, IProductMapper productMapper)
     {
         _productRepository = productRepository;
+        _publisher = publisher;
         _productMapper = productMapper;
     }
 
@@ -23,6 +27,8 @@ public class ProductServices : IProductServices
 
         if (stored == null)
             throw new Domain.Exception.InvalidOperationException("erro interno ao inserir/alterar o produto");
+
+        await PublishEvent(request, stored);
 
         return _productMapper.ToProductDto(stored);
     }
@@ -41,5 +47,16 @@ public class ProductServices : IProductServices
             throw new NotFoundException($"Nenhum Produto encontrado");
 
         return stored.Select(log => _productMapper.ToProductResponse(log)).ToList();
+    }
+
+    private async Task PublishEvent(ProductRequest productRequest, Product product)
+    {
+        var generatedEvent = new ProductCreatedEvent
+        {
+            ProductId = product.Id,
+            Quantity = productRequest.Quantity
+        };
+
+        await _publisher.PublishAsync(generatedEvent);
     }
 }
