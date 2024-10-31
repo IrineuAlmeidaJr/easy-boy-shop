@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Outgoing", "Outgoing\Outgoing.csproj", "{583337B1-C0E1-4579-925C-C3F632071E02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-Stock", "API-Stock\API-Stock.csproj", "{B1755642-9906-4C40-9C43-49E288CFDBEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{583337B1-C0E1-4579-925C-C3F632071E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{583337B1-C0E1-4579-925C-C3F632071E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{583337B1-C0E1-4579-925C-C3F632071E02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1755642-9906-4C40-9C43-49E288CFDBEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1755642-9906-4C40-9C43-49E288CFDBEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1755642-9906-4C40-9C43-49E288CFDBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1755642-9906-4C40-9C43-49E288CFDBEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

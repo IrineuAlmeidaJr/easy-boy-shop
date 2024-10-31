@@ -8,10 +8,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Refit.HttpClientFactory" Version="7.2.1" />
+		<PackageReference Include="Confluent.Kafka" Version="2.5.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
-
+	
 </Project>
